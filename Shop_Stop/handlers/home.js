@@ -30,7 +30,7 @@ module.exports = (req, res) => {
 
       if (queryData.query) {
         console.log(queryData.query)
-        products = products.filter((p) => console.log(p.name.toLowerCase().indexOf(queryData.query)))
+        products = products.filter((p) => p.name.toLowerCase().indexOf(queryData.query) > -1)
       }
 
       let content = ''
