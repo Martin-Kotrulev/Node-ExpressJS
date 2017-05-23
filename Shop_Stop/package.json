@@ -1,0 +1,23 @@
+{
+  "name": "shop_stop",
+  "version": "0.0.1",
+  "description": "Shop Stop",
+  "main": "index.js",
+  "dependencies": {
+    "express": "4.15.3",
+    "standard": "10.0.2"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Martin-Kotrulev/Node-ExpressJS.git"
+  },
+  "author": "M. Kotrulev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Martin-Kotrulev/Node-ExpressJS/issues"
+  },
+  "homepage": "https://github.com/Martin-Kotrulev/Node-ExpressJS#readme"
+}
