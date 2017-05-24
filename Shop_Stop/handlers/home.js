@@ -29,7 +29,6 @@ module.exports = (req, res) => {
       let products = database.products.getAll()
 
       if (queryData.query) {
-        console.log(queryData.query)
         products = products.filter((p) => p.name.toLowerCase().indexOf(queryData.query) > -1)
       }
 
