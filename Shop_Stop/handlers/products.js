@@ -32,7 +32,7 @@ module.exports = (req, res) => {
     form.on('part', (part) => {
       if (part.filename) {
         let dataString = ''
-        let fileExt = part.filename.substring(part.filename.lastIndexOf('.'))
+        let suffix = part.filename.substring(part.filename.lastIndexOf('.'))
 
         part.setEncoding('binary')
         part.on('data', (data) => {
@@ -41,7 +41,7 @@ module.exports = (req, res) => {
 
         part.on('end', () => {
           let fileName = shortid.generate()
-          let filePath = path.join('/content/images/', fileName + fileExt)
+          let filePath = path.join('/content/images/', fileName + suffix)
 
           product.image = filePath
 
