@@ -3,6 +3,7 @@ const fs = require('fs')
 const url = require('url')
 const qs = require('querystring')
 const formidable = require('formidable')
+const db = require('../config/database')
 
 module.exports = (req, res) => {
   req.pathname = req.pathname || url.parse(req.url).pathname
@@ -22,6 +23,7 @@ module.exports = (req, res) => {
       data = data.toString()
         .replace('{url-is-null}', '')
         .replace('{name-is-null}', '')
+        .replace('{content}', '')
       res.write(data)
       res.end()
     })
@@ -39,7 +41,7 @@ module.exports = (req, res) => {
       imgUrl = fields.url
 
       if (!imgName || !imgUrl) {
-        fs.readFile(htmlPath, (err, data) => {
+        fs.readFile(htmlPath, 'utf8', (err, data) => {
           if (err) {
             console.log(err)
             return
@@ -49,18 +51,46 @@ module.exports = (req, res) => {
             'Content-Type': 'text/html'
           })
 
+          data = data.toString()
           if (!imgUrl) {
-            data = data.toString().replace('{url-is-null}', '<p class="error-msg">* [URL] should be specified</p>')
+            data = data.replace('{url-is-null}', '<p class="error-msg">* [URL] should be specified</p>')
           } else {
-            data = data.toString().replace('{url-is-null}', '')
+            data = data.replace('{url-is-null}', '')
           }
 
           if (!imgName) {
-            data = data.toString().replace('{name-is-null}', '<p class="error-msg">* [Name] should be specified</p>')
+            data = data.replace('{name-is-null}', '<p class="error-msg">* [Name] should be specified</p>')
           } else {
-            data = data.toString().replace('{name-is-null}', '')
+            data = data.replace('{name-is-null}', '')
           }
 
+          res.write(data)
+          res.end()
+        })
+      } else {
+        let image = {name: imgName, url: imgUrl}
+        db.images.add(image)
+
+        fs.readFile(htmlPath, 'utf8', (err, data) => {
+          if (err) {
+            console.log(err)
+            return
+          }
+
+          res.writeHead(200, {
+            'Content-Type': 'text/html'
+          })
+
+          let content =
+            `<div class="center-container">
+              <img class="product-image center-align" src="${image.url}"/>
+              <h2 class="center-align">${image.name}</h2>
+            </div>`
+
+          data = data.toString()
+            .replace('{content}', content)
+            .replace('{url-is-null}', '')
+            .replace('{name-is-null}', '')
           res.write(data)
           res.end()
         })

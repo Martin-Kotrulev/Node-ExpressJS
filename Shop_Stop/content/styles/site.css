@@ -148,6 +148,24 @@ textarea.input-field {
   flex-wrap: wrap;
 }
 
+.center-container {
+  display: block;
+}
+
+.details-img {
+  width: 100%;
+  border: 5px solid black;
+  margin: 0 auto;
+}
+
+.center-align {
+  box-sizing: border-box;
+  margin: 0 auto;
+  display: block;
+  align-content: center;
+  text-align: center;
+}
+
 #search-form {
   padding: 10px 10px 10px 0px;
 }

@@ -49,7 +49,7 @@ module.exports = (req, res) => {
       } else {
         for (let p of products) {
           content +=
-            `<div class="produc-card">
+            `<div class="product-card">
               <img class="product-image" src="${p.image}">
               <h2>${p.name}</h2>
               <p>${p.description}</p>

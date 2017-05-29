@@ -1,13 +1,13 @@
 const fs = require('fs')
 const path = require('path')
 const dbPath = path.join(__dirname, '/database.json')
-const defDb = '{products: [], images: []}'
+const defDb = '{"products": [], "images": {}}'
 
 let dbInit = () => {
   if (!fs.existsSync(dbPath)) {
     fs.writeFileSync(dbPath, defDb)
 
-    return {products: [], images: []}
+    return {products: [], images: {}}
   }
 
   let json = fs.readFileSync(dbPath).toString() || defDb
@@ -28,7 +28,13 @@ let getProducts = () => {
 }
 
 let getImages = () => {
-  return db.images
+  let images = []
+  let keys = Object.keys(db.images)
+  for (let k of keys) {
+    images.push(db.images[k])
+  }
+
+  return images
 }
 
 module.exports.products = {}
@@ -49,14 +55,18 @@ module.exports.products.findByName = (name) => {
 }
 
 module.exports.images.add = (image) => {
-  image.id = db.images.length + 1
-  db.images.push(image)
+  image.id = Object.keys(db.images).length + 1
+  db.images[image.id] = image
 
   dbSave()
 }
 
 module.exports.images.getAll = getImages
 
-module.exports.images.findById = (id) => {
-  return getImages().filter((i) => i.id === id)
+module.exports.images.getById = (id) => {
+  return db.images[id]
+}
+
+module.exports.images.getSize = () => {
+  return Object.keys(db.images).length
 }
