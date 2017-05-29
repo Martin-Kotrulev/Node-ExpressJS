@@ -1,5 +1,6 @@
 const homeHandler = require('./home')
-const filesHandler = require('./static-files')
-const productsHandler = require('./products.js')
+const productsHandler = require('./products')
+const staticFilesHandler = require('./static-files')
+const imageHandler = require('./images')
 
-module.exports = [homeHandler, filesHandler, productsHandler]
+module.exports = [homeHandler, productsHandler, staticFilesHandler, imageHandler]

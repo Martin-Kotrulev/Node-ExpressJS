@@ -1,23 +1,30 @@
+// get path name
+// check if path is valid for home and is GET
+// get file path to the response html
+// get the query string
+// get the products
+// filter against query
+
+const path = require('path')
 const url = require('url')
 const fs = require('fs')
-const path = require('path')
-const database = require('../config/database')
 const qs = require('querystring')
+
+const db = require('../config/database')
 
 module.exports = (req, res) => {
   req.pathname = req.pathname || url.parse(req.url).pathname
 
   if (req.pathname === '/' && req.method === 'GET') {
     let filePath = path.normalize(path.join(__dirname, '../views/home/index.html'))
-    let queryData = qs.parse(url.parse(req.url).query)
 
-    fs.readFile(filePath, (err, data) => {
+    fs.readFile(filePath, 'utf8', (err, data) => {
       if (err) {
         console.log(err)
         res.writeHead(404, {
           'Content-Type': 'text/plain'
         })
-        res.write('404 not found!')
+        res.write('404 FILE NOT FOUND')
         res.end()
         return
       }
@@ -26,28 +33,33 @@ module.exports = (req, res) => {
         'Content-Type': 'text/html'
       })
 
-      let products = database.products.getAll()
-
-      if (queryData.query) {
-        products = products.filter((p) => p.name.toLowerCase().indexOf(queryData.query) > -1)
+      let query = qs.parse(url.parse(req.url).query).query
+      let products
+      if (query) {
+        products = db.products.findByName(query)
+      } else {
+        products = db.products.getAll()
       }
 
       let content = ''
-      for (let product of products) {
-        content +=
-         `<div class="product-card">
-          <img class="product-img" src="${product.image}">
-          <h2>${product.name}</h2>
-          <p>${product.description}</p>
-        </div>`
+      if (products.length === 0 && query) {
+        content = `No results found for query "${query}"`
+      } else if (products.length === 0 && !query) {
+        content = 'No products available'
+      } else {
+        for (let p of products) {
+          content +=
+            `<div class="produc-card">
+              <img class="product-image" src="${p.image}">
+              <h2>${p.name}</h2>
+              <p>${p.description}</p>
+            </div>`
+        }
       }
 
-      if (!content && queryData.query) {
-        content = `No results for search '${queryData.query}'`
-      }
+      data = data.toString().replace('{content}', content)
 
-      let html = data.toString().replace('{content}', content)
-      res.write(html)
+      res.write(data)
       res.end()
     })
   } else {

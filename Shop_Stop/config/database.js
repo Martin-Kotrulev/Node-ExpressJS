@@ -1,37 +1,62 @@
 const fs = require('fs')
 const path = require('path')
 const dbPath = path.join(__dirname, '/database.json')
+const defDb = '{products: [], images: []}'
 
-let getProducts = () => {
+let dbInit = () => {
   if (!fs.existsSync(dbPath)) {
-    fs.writeFileSync(dbPath, '[]')
+    fs.writeFileSync(dbPath, defDb)
 
-    return []
+    return {products: [], images: []}
   }
 
-  let json = fs.readFileSync(dbPath).toString() || '[]'
-  let products = JSON.parse(json)
+  let json = fs.readFileSync(dbPath).toString() || defDb
+  let db = JSON.parse(json)
 
-  return products
+  return db
 }
 
-let saveProducts = (products) => {
-  let json = JSON.stringify(products)
+let dbSave = () => {
+  let json = JSON.stringify(db)
   fs.writeFileSync(dbPath, json)
+}
+
+let db = dbInit()
+
+let getProducts = () => {
+  return db.products
+}
+
+let getImages = () => {
+  return db.images
 }
 
 module.exports.products = {}
 
+module.exports.images = {}
+
 module.exports.products.getAll = getProducts
 
 module.exports.products.add = (product) => {
-  let products = getProducts()
-  product.id = products.length + 1
-  products.push(product)
+  product.id = db.products.length + 1
+  db.products.push(product)
 
-  saveProducts(products)
+  dbSave()
 }
 
 module.exports.products.findByName = (name) => {
   return getProducts().filter((p) => p.name.toLowerCase().includes(name))
+}
+
+module.exports.images.add = (image) => {
+  image.id = db.images.length + 1
+  db.images.push(image)
+
+  dbSave()
+}
+
+module.exports.images.getAll = getImages
+
+module.exports.images.findById = (id) => {
+  return getImages().filter((i) => i.id === id)
 }
