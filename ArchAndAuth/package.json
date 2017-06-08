@@ -3,9 +3,16 @@
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "6.10.3",
+    "npm": "3.10.10"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "mongoose": "4.10.5"
+  }
 }
