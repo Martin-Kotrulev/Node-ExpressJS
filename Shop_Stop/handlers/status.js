@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path')
-const db = require('../config/database')
+//const db = require('../config/database')
 
 module.exports = (req, res) => {
   let header = req.headers['statusheader']

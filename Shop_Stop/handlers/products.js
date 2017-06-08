@@ -1,5 +1,5 @@
 const url = require('url')
-const database = require('../config/database')
+const Product = require('../models/Product')
 const fs = require('fs')
 const path = require('path')
 const qs = require('querystring')
@@ -67,13 +67,13 @@ module.exports = (req, res) => {
     })
 
     form.on('close', () => {
-      database.products.add(product)
+      Product.create(product).then(() => {
+        res.writeHead(302, {
+          Location: '/'
+        })
 
-      res.writeHead(302, {
-        Location: '/'
+        res.end()
       })
-
-      res.end()
     })
 
     form.parse(req)

@@ -9,8 +9,9 @@ const path = require('path')
 const url = require('url')
 const fs = require('fs')
 const qs = require('querystring')
+const Product = require('../models/Product')
 
-const db = require('../config/database')
+//const db = require('../config/database')
 
 module.exports = (req, res) => {
   req.pathname = req.pathname || url.parse(req.url).pathname
@@ -36,9 +37,17 @@ module.exports = (req, res) => {
       let query = qs.parse(url.parse(req.url).query).query
       let products
       if (query) {
-        products = db.products.findByName(query)
+        Product.find({}, (err, allProducts) => {
+          if (err) {
+            console.log(err)
+            return
+          }
+          products = allProducts
+        })
       } else {
-        products = db.products.getAll()
+        products = Product.find({}, (err, allProducts) => {
+          
+        })
       }
 
       let content = ''
