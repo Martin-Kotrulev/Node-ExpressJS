@@ -14,7 +14,9 @@ app.engine('handlebars', handlebars({
   defaultLayout: 'main'
 }))
 
-app.set("view engine", "hbs")
+app.set("view engine", "handlebars")
+
+app.use(express.static('public'))
 
 app.get('/', (req, res) => {
   console.log('Express working...')
