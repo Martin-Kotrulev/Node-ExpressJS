@@ -1,18 +1,9 @@
-const express = require('express')
-const mongoose = require('mongoose')
+const app = require('express')()
+const env = process.env.NODE_ENV || 'development'
+const settings = require('./config/settings')[env]
 
-mongoose.Promise = global.Promise
+require('./config/database')(settings)
+require('./config/express')(app)
+require('./config/routes')(app)
 
-let app = express()
-
-app.get('/', (req, res) => {
-  console.log('Express working...')
-
-  mongoose.connect('mongodb://localhost:27017/blogsystem')
-    .then(() => {
-      console.log('Mongoose ready...')
-      res.send('OK!')
-    })
-})
-
-app.listen(1337)
+app.listen(settings.port)
