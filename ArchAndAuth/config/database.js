@@ -3,6 +3,8 @@ const mongoose = require('mongoose')
 mongoose.Promise = global.Promise
 
 module.exports = (settings) => {
+  require('../server/data/User')
+
   mongoose.connect(settings.db)
   let db = mongoose.connection
 
