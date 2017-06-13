@@ -11,6 +11,10 @@ module.exports = () => {
     })
   }))
 
+  passport.serializeUser((user, done) => {
+    if (user) return done(null, user._id)
+  })
+
   passport.deserializeUser((id, done) => {
     User.findById(id).then(user => {
       if (!user) return done(null, false)

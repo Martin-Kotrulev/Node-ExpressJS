@@ -9,8 +9,21 @@
         <ul class="menu">
             <li><a href="/">Home</a></li>
             <li><a href="/about">About</a></li>
+            {{#if currentUser}}
+            <li>{{currentUser.username}}</li>
+            <li>
+                <form action="/users/logout" id="logout-form" method="POST"></form>
+                <a href="javascript:document.getElementById('logout-form').submit()">Logout</a>
+            </li>
+            {{else}}
+            <li><a href="/users/register">Register</a></li>
+            <li><a href="/users/login">Login</a></li>
+            {{/if}}
         </ul>
     </div>
+    {{#if globalError}}
+    <h3 class="error" >{{globalError}}</h3>
+    {{/if}}
     {{{body}}}
 </body>
 </html>

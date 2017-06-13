@@ -1,5 +1,7 @@
 const homeController = require('./home-controller')
+const usersController = require('./users-controller')
 
 module.exports = {
-  home: homeController
+  home: homeController,
+  users: usersController
 }
