@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Test App</title>
+    <title>{{sitename}}</title>
     <link rel="stylesheet" href="/css/site.css" type="text/css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
@@ -29,10 +29,16 @@
             </ul>
         </div>
     </nav>
-    {{#if globalError}}
-    <h3 class="error" >{{globalError}}</h3>
-    {{/if}}
-    {{{body}}}
+    <div class="container">
+        <div class="aler alert-danger">
+        {{#if globalError}}
+        <strong>{{globalError}}</strong>
+        {{/if}}
+        </div>
+    </div>
+    <div class="container">
+        {{{body}}}
+    </div> 
 </body>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </html>
