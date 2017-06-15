@@ -8,10 +8,6 @@ module.exports = {
   },
   registerPost: (req, res) => {
     let reqUser = req.body
-
-    console.log(reqUser)
-
-    // Add user validation
     let salt = encryption.generateSalt()
     let hashedPassword = encryption.generateHashedPassword(salt, reqUser.password)
 
@@ -25,18 +21,19 @@ module.exports = {
 
     user.save()
       .then(user => {
-        req.logIn(user, (err, user) => {
+        req.login(user, err => {
           if (err) {
             res.locals.globalError = err
-            res.render('users/register', user)
+            res.render('users/register', reqUser)
           }
 
+          res.locals.username = req.user.username
           res.redirect('/')
         })
       })
       .catch(err => {
         res.locals.globalError = errors.getFirstErrorMessage(err)
-        res.render('users/register', {user: user})
+        res.render('users/register', { user: reqUser })
       })
   },
   logout: (req, res) => {
@@ -51,20 +48,19 @@ module.exports = {
 
     User.findOne({username: reqUser.username})
       .then(user => {
-        console.log(user)
         if (!user) {
           res.locals.globalError = 'Invalid username or password'
           res.render('users/login')
           return
         }
 
-        if (!user.authenticate(req.password)) {
+        if (!user.authenticate(reqUser.password)) {
           res.locals.globalError = 'Invalid username or password'
           res.render('users/login')
           return
         }
 
-        req.logIn(user, (err, user) => {
+        req.logIn(user, err => {
           if (err) {
             res.locals.globalError = err
             res.render('users/login')
@@ -72,6 +68,9 @@ module.exports = {
 
           res.redirect('/')
         })
+      })
+      .catch(err => {
+        console.log(err)
       })
   }
 }

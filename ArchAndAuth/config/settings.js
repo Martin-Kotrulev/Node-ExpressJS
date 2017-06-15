@@ -7,7 +7,9 @@ module.exports = {
   development: {
     rootPath: rootPath,
     db: 'mongodb://localhost:27017/blogsystem',
-    port: port
+    port: port,
+    sessionSecret: 'super-secret!@#$%',
+    staticsFolder: 'public'
   },
   production: {}
 }
