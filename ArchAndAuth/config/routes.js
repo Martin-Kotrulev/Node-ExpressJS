@@ -1,4 +1,5 @@
 const controllers = require('../server/controllers')
+const auth = require('./auth')
 
 module.exports = (app) => {
   // Home controller routes

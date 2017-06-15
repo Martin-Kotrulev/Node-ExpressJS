@@ -1,5 +1,6 @@
 const encryption = require('../utilities/encryption')
 const User = require('../data/User')
+const errors = require('../utilities/errors')
 
 module.exports = {
   registerGet: (req, res) => {
@@ -14,26 +15,29 @@ module.exports = {
     let salt = encryption.generateSalt()
     let hashedPassword = encryption.generateHashedPassword(salt, reqUser.password)
 
-    User.create({
-      username: reqUser.firstName,
+    let user = new User({
+      username: reqUser.username,
       hashedPass: hashedPassword,
       firstName: reqUser.firstName,
       lastName: reqUser.lastName,
       salt: salt
-    }).then(user => {
-      req.logIn(user, (err, user) => {
-        if (err) {
-          res.locals.globalError = err
-          res.render('users/register', user)
-        }
-
-        res.redirect('/')
-      })
-    }).catch(err => {
-      console.log(err)
-      res.locals.globalError = err // `There's already registered user with the name "${reqUser.username}"!`
-      res.render('users/register')
     })
+
+    user.save()
+      .then(user => {
+        req.logIn(user, (err, user) => {
+          if (err) {
+            res.locals.globalError = err
+            res.render('users/register', user)
+          }
+
+          res.redirect('/')
+        })
+      })
+      .catch(err => {
+        res.locals.globalError = errors.getFirstErrorMessage(err)
+        res.render('users/register', {user: user})
+      })
   },
   logout: (req, res) => {
     req.logout()
@@ -45,27 +49,29 @@ module.exports = {
   loginPost: (req, res) => {
     let reqUser = req.body
 
-    User.findOne({username: reqUser.username}).then(user => {
-      if (!user) {
-        res.locals.globalError = 'Invalid username or password'
-        res.render('users/login')
-        return
-      }
-
-      if (!user.authenticate(req.password)) {
-        res.locals.globalError = 'Invalid username or password'
-        res.render('users/login')
-        return
-      }
-
-      req.logIn(user, (err, user) => {
-        if (err) {
-          res.locals.globalError = err
+    User.findOne({username: reqUser.username})
+      .then(user => {
+        console.log(user)
+        if (!user) {
+          res.locals.globalError = 'Invalid username or password'
           res.render('users/login')
+          return
         }
 
-        res.redirect('/')
+        if (!user.authenticate(req.password)) {
+          res.locals.globalError = 'Invalid username or password'
+          res.render('users/login')
+          return
+        }
+
+        req.logIn(user, (err, user) => {
+          if (err) {
+            res.locals.globalError = err
+            res.render('users/login')
+          }
+
+          res.redirect('/')
+        })
       })
-    })
   }
 }
