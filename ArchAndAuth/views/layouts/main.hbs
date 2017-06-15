@@ -14,8 +14,10 @@
             <ul class="nav navbar-nav">
                 <li><a href="/">Home</a></li>
                 <li><a href="/about">About</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
                 {{#if currentUser}}
-                <li>{{currentUser.username}}</li>
+                <li><a href="#">{{currentUser.username}}</a></li>
                 <li>
                     <form action="/users/logout" id="logout-form" method="POST"></form>
                     <a href="javascript:document.getElementById('logout-form').submit()">Logout</a>
