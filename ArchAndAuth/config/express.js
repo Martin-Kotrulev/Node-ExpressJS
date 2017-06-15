@@ -6,6 +6,7 @@ const passport = require('passport')
 const viewEngine = require('./view-engine')
 
 module.exports = (app, settings) => {
+  // Setting view engine
   app.engine(viewEngine.name, viewEngine.engine)
   app.set('view engine', viewEngine.name)
 
