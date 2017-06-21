@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Messanger</title>
+    <link rel="stylesheet" href="/css/site.css" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">{{sitename}}</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+                {{#if isAdmin}}
+                <li><a href="/admins/all">Manage Admins</a></li>
+                {{/if}}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {{#if currentUser}}
+                <li>
+                    <form action="/users/find" method="GET">
+                        <input name="searchName" placeholder="Search for user..."/>
+                        <input type="submit" value="Search"/>
+                    </form>
+                </li>
+                <li><a href="#">{{currentUser.username}}</a></li>
+                <li>
+                    <form action="/users/logout" id="logout-form" method="POST"></form>
+                    <a href="javascript:document.getElementById('logout-form').submit()">Logout</a>
+                </li>
+                {{else}}
+                <li><a href="/users/register">Register</a></li>
+                <li><a href="/users/login">Login</a></li>
+                {{/if}}
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        {{#if messageUser}}
+        <h3>Found user: <strong>{{messageUser}}</strong></h3>
+        <form action="/thread/{{messageUser}}" method="POST">
+            <input type="hidden" name="receiver" value="{{messageUser}}"/>
+            <input type="submit" value="Start Conversation"/>
+        </form>
+        <form action="/users/block" method="POST">
+            <input type="hidden" name="forUser" value="{{messageUser}}"/>
+            <input type="submit" value="{{#if blocked}}Unblock{{else}}Block{{/if}}"/>
+        </form>
+        {{/if}}
+        <div class="aler alert-danger">
+        {{#if globalError}}
+        <strong>{{globalError}}</strong>
+        {{/if}}
+        </div>
+    </div>
+    
+    <div class="container">
+        {{{body}}}
+    </div> 
+</body>
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous">
+</script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</html>

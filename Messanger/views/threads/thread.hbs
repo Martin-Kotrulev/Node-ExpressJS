@@ -1,0 +1,49 @@
+{{#if threadErr}}
+<div class="aler alert-danger">    
+    <strong>{{threadErr}}</strong>
+</div>
+{{/if}}
+{{#if blocked}}
+<div class="aler alert-danger">    
+    <strong>You are currently blocked by this user</strong>
+</div>
+{{/if}}
+<div class="messages-box">
+<ul class="list-group">
+    {{#each thread.messages}}
+    <li class="list-group-item">
+        <h5 class="{{#if this.fromCaller}}text-right{{else}}text-left{{/if}}">
+            At: {{this.added}} {{#if this.fromCaller}}Me: {{else}} {{../receiverName}}: {{/if}}
+        </h5>
+        {{#unless this.fromCaller}}
+        {{#if this.isLiked}}
+            <a href="javascript:document.getElementById('likeForm-{{this._id}}').submit()">Dislike</a>  
+            {{else}}
+            <a href="javascript:document.getElementById('likeForm-{{this._id}}').submit()">Like</a>
+            {{/if}}
+            <form action="/message/{{this._id}}" id="likeForm-{{this._id}}" method="POST">
+                <input type="hidden" name="like" value="{{#if this.isLiked}}false{{else}}true{{/if}}">
+                <input type="hidden" name="liker" value="{{../currentUser}}"/>
+            </form>
+        {{/unless}}
+        {{#if this.isImg}}
+            <img src="{{this.message}}" alt="" class="img-responsive">
+        {{else if this.isLink}}
+            <a class="{{#if this.fromCaller}}text-right{{else}}text-left{{/if}}" href="{{this.message}}">{{this.message}}</a>
+        {{else}}
+            <p class="{{#if this.fromCaller}}text-right{{else}}text-left{{/if}}">
+                {{this.message}}
+            </p>
+        {{/if}}
+    </li>
+    {{/each}}
+</ul>
+</div>
+{{#unless blocked}}
+<form action="/message/add" method="POST">
+    <input class="form-control" name="message" placeholder="Enter message..." value="{{oldMessage}}"/>
+    <input type="hidden" name="threadId" value="{{thread._id}}"/>
+    <input type="hidden" name="userParam" value="{{userParam}}"/>
+    <input class="btn btn-default" type="submit" value="Send Message">
+</form>
+{{/unless}}

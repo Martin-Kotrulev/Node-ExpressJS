@@ -1,0 +1,16 @@
+{{#if currentUser}}
+<h1>Hi, {{currentUser.username}}!</h1>
+{{else}}
+<h1>Hi!</h1>
+{{/if}}
+{{#if threads}}
+<h3>Conversations: </h3>
+<ul class="list-group">
+{{#each threads}}
+    <li class="list-group-item">
+        <h4><a href="/thread/{{this.other}}">{{this.other}}</a></h4>
+        Started: {{this.added}}
+    </li>
+{{/each}}
+{{/if}}
+</ul>

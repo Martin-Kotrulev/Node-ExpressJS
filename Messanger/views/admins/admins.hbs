@@ -1,0 +1,21 @@
+<ul class="list-group">
+    {{#each users}}
+    <li class="list-group-item">
+        <h3>{{this.username}}</h3>
+        {{#if this.isAdmin}}
+        <h5>Admin</h5>
+        {{#if ../isMaster}}
+        <form action="/admins/remove">
+            <input type="hidden" name="userId" value="{{this._id}}"/>
+            <input type="submit" value="Remove Admin Role">
+        </form>
+        {{/if}}
+        {{else}}
+        <form action="/admins/add" method="POST">
+            <input type="hidden" name="userId" value="{{this._id}}">
+            <input type="submit" value="Make Admin">
+        </form>
+        {{/if}}
+    </li>
+    {{/each}}
+</ul>
